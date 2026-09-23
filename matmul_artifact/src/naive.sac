@@ -1,0 +1,117 @@
+use Array: all except {drop};
+use StdIO: all;
+use Benchmarking: all;
+
+#define M 8600
+#define K 10000
+#define N 10000
+
+#define M3B 40
+#define K3B 40
+#define N3B 40
+
+#define M2B 5
+#define K2B 5
+#define N2B 5
+
+#define M1B 43
+#define K1B 50
+#define N1B 50
+
+inline
+int[o:shp_res,i:ishp] drop(int[o] sv, int[o:oshp,i:ishp] A)
+    | _all_V_(_le_VxV_(_abs_V_(sv), oshp))
+{
+    shp_res = _sub_VxV_(oshp, _abs_V_(sv));
+    start = _max_VxS_(sv, 0);
+    return { iv -> A[_add_VxV_(start, iv)]      | iv < shp_res;
+             iv -> with {} : genarray (ishp, 0) | iv < shp_res };
+}
+
+inline
+double[o:shp_res,i:ishp] drop(int[o] sv, double[o:oshp,i:ishp] A)
+    | _all_V_(_le_VxV_(_abs_V_(sv), oshp))
+{
+    shp_res = _sub_VxV_(oshp, _abs_V_(sv));
+    start = _max_VxS_(sv, 0);
+    return { iv -> A[_add_VxV_(start, iv)]      | iv < shp_res;
+             iv -> with {} : genarray (ishp, 0.0) | iv < shp_res };
+}
+
+inline double[*] sum_outer(double[+] a)
+{
+   return with {
+            ([0] <= iv < take([1], shape(a))): a[iv];
+          } : fold (+, genarray(drop([1], shape(a)), 0d));
+}
+
+inline int[.] even (int[.] v)
+{
+       return { [i] -> v[i*2]  | [i] < shape(v)/2};
+}
+
+inline int[.] odd (int[.] v)
+{
+       return { [i] -> v[i*2+1]  | [i] < shape(v)/2};
+}
+
+inline
+int[.] merge (int[.] a, int[.] b)
+{
+        return {[i] -> a[i/2] | [0] <= [i] < shape(a)*2 step [2];
+                    [i] -> b[i/2] | [1] <= [i] < shape(b)*2 step [2]};
+}
+
+inline
+double matmul(double a, double b)
+{
+  return a * b;
+}
+
+specialize double matmul(double a, double b);
+specialize double[.,.] matmul(double[M3B, K3B] a, double[N3B, K3B] b);
+specialize double[.,.,.,.] matmul(double[M2B, K2B, M3B, K3B] a,
+                                  double[N2B, K2B, N3B, K3B] b);
+specialize double[.,.,.,.,.,.] matmul(double[M3B, K3B, M2B, K2B, M3B, K3B] a,
+                                      double[N3B, K3B, N2B, K2B, N1B, K1B] b);
+specialize double[.,.] matmul(double[M, K] a, double[N, K] b);
+inline double[*] matmul( double[*] a, double[*] b)
+{
+  return {[i, j] -> with {
+                        ([0] <= [k] < [shape(a)[1]]): matmul(a[i, k], b[j, k]);
+                    }: fold(+, genarray(merge(even(drop([2], shape(a))),
+                                              even(drop([2], shape(b)))), 
+                                        0d))
+                  | [i, j] < [shape(a)[0], shape(b)[0]]};
+}
+
+inline
+double[*] block(int[2] shp, double[*] a)
+{
+    rdim = [dim(a) - shape(shp)[0]];
+    outer_shp = shape(a) / (genarray(rdim, 1)++shp);
+    return {iv -> tile(shp, drop(rdim, iv) * shp, a[take(rdim, iv)])
+        | iv < outer_shp};
+}
+
+int main()
+{
+    a = reshape([M1B, K1B, M2B, K2B, M3B, K3B], tod(iota(M * K)));
+    b = reshape([N1B, K1B, N2B, K2B, N3B, K3B], tod(iota(K * N)));
+
+    iblocked = getInterval("blocked", 3);
+
+//    a = block([M2B, K2B], a);
+//    a = block([M3B, K3B], a);
+//    b = block([K2B, N2B], b);
+//    b = block([K3B, N3B], b);
+
+    start (iblocked);
+    c = matmul(a, b);
+    end (iblocked);
+
+    time, unit = returnResultUnit(iblocked);
+    printf("%lf", 2d * tod(M) * tod(N) * tod(K) / time / 1000000000d);
+
+    return toi(c[0, 0, 0, 0, 0, 0]);
+}

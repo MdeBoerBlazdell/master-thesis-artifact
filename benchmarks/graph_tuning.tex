@@ -1,0 +1,158 @@
+\documentclass{article}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{tikz}
+\usepackage{subcaption}
+
+\pgfplotsset{compat=1.18}
+\pgfplotstableset{col sep=comma}
+\pgfkeys{/pgf/number format/.cd,fixed,precision=0}
+
+\begin{document}
+
+\begin{figure*}[ht]
+    \centering
+
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{loglogaxis}[
+                width=\linewidth,
+                title={Benchmark 1: single-element access},
+                xlabel=threads,
+                ylabel=rows/s,
+                anchor=west,
+                xtick={1,2,4,8,16,32},
+                xticklabels={1,2,4,8,16,32},
+                legend pos=south east,
+            ]
+
+                \addplot+ [
+                    error bars/.cd,
+                    y explicit,
+                    y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/one_elem_cores_slices.csv};
+                \addlegendentry{Slices}
+
+                \addplot+ [
+                    error bars/.cd,
+                    y explicit,
+                    y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/one_elem_cores_selection.csv};
+                \addlegendentry{Selections}
+
+            \end{loglogaxis}
+        \end{tikzpicture}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{loglogaxis}[
+                width=\linewidth,
+                title={Benchmark 2: row summation},
+                xlabel=threads,
+                ylabel=rows/s,
+                anchor=west,
+                xtick={1,2,4,8,16,32},
+                xticklabels={1,2,4,8,16,32},
+                legend pos=south east,
+            ]
+
+                \addplot+ [
+                    error bars/.cd,
+                    y explicit,
+                    y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/sum_cores_slices.csv};
+                \addlegendentry{Slices}
+
+                \addplot+ [
+                    error bars/.cd,
+                    y explicit,
+                    y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/sum_cores_selection.csv};
+                \addlegendentry{Selections}
+
+            \end{loglogaxis}
+        \end{tikzpicture}
+    \end{subfigure}
+
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \begin{tikzpicture}
+        \begin{loglogaxis}[
+            width=\linewidth,
+            title={Benchmark 4: prefix sum},
+            xlabel=threads,
+            ylabel=rows/s,
+            anchor=west,
+            xtick={1,2,4,8,16,32},
+            xticklabels={1,2,4,8,16,32},
+            ytick={10000,20000,50000,100000,200000,500000,1000000},
+            yticklabels={
+                $10^4$,
+                $2\cdot10^4$,
+                $5\cdot10^4$,
+                $10^5$,
+                $2\cdot10^5$,
+                $5\cdot10^5$,
+                $10^6$
+            },
+            legend pos=south east,
+        ]
+
+
+
+                \addplot+ [
+                    error bars/.cd,
+                    y explicit,
+                    y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/scan_cores_slices.csv};
+                \addlegendentry{Slices}
+
+                \addplot+ [
+                    error bars/.cd,
+                    y explicit,
+                    y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/scan_cores_selection.csv};
+                \addlegendentry{Selections}
+
+            \end{loglogaxis}
+        \end{tikzpicture}
+    \end{subfigure}
+
+    \caption{Parallel scaling of the memory-bound benchmarks.}
+\end{figure*}
+
+\end{document}

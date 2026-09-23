@@ -1,0 +1,55 @@
+\documentclass{article}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{tikz}
+
+\pgfplotsset{compat=1.18}
+\pgfplotstableset{col sep=comma}
+\pgfkeys{/pgf/number format/.cd,fixed,precision=0}
+
+\begin{document}
+\begin{figure*}[ht]
+        \begin{tikzpicture}
+            \begin{loglogaxis}[
+                xlabel=P,
+                ylabel=Gflops/s,
+                anchor=west,
+                legend style = {
+                    at = {(0.0, -0.4)},
+                    anchor = west,
+                    legend columns = 2
+                },
+                xtick = {1, 2, 4, 8, 16, 32},
+                xticklabels = {1, 2, 4, 8, 16, 32},
+                ytick = {10, 20, 40, 80, 160, 320, 640, 1280},
+                yticklabels = {10, 20, 40, 80, 160, 320, 640, 1280}
+            ]
+
+                \addplot+ [
+                    error bars/.cd,
+                        y explicit,
+                        y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/index.csv};
+
+                \addplot+ [
+                    error bars/.cd,
+                        y explicit,
+                        y dir=both,
+                ] table [
+                    x=P,
+                    y=mean,
+                    y error plus expr=\thisrow{max}-\thisrow{mean},
+                    y error minus expr=\thisrow{mean}-\thisrow{min},
+                ] {csvs/index_slices.csv};
+
+		\legend{Handwritten rewrites, Slices}		
+            \end{loglogaxis}
+        \end{tikzpicture}
+\end{figure*}
+\end{document}

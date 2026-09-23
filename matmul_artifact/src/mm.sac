@@ -1,0 +1,233 @@
+// My experiments to explain chapter on implementation
+// of mm in sac.
+
+/* To go from i, j, k to i, k, j on the outer level */
+
+#define M0B  32
+#define K0B  40
+#define N0B  10
+
+#define M1B  3
+#define K1B  1
+#define N1B  125
+
+#define M2B  15
+#define K2B  1
+#define N2B  1
+
+#define M3B  6
+#define K3B  250
+#define N3B  8
+
+#define N   (N0B * N1B * N2B * N3B)
+#define M   (M0B * M1B * M2B * M3B)
+#define K   (K0B * K1B * K2B * K3B)
+
+use Array:all except {tile};
+use StdIO:all;
+use Benchmarking: all;
+use Numerical: all;
+use Shapely: all;
+
+external double[M3B, N3B] matmul(double[M0B, K0B, M1B, K1B, M2B, K2B, M3B, K3B] a,
+                                 double[K0B, N0B, K1B, N1B, K2B, N2B, K3B, N3B] b,
+                                 int offset_a, int offset_b);
+    #pragma linkobj "./kernel.o"
+    #pragma linksign [1,2,3,4,5]
+    #pragma linkname "matmul"
+
+
+#define ASZS  M0B, K0B, M1B, K1B,  M2B, K2B,  M3B, K3B
+#define BSZS  K0B, N0B, K1B, N1B,  K2B, N2B,  K3B, N3B
+
+inline int row_major(int[.] iv, int[.] shp)
+{
+  return sum({[i] -> iv[i] * prod(drop([i + 1], shp))});
+}
+
+inline
+double[.,.,.,.,.,.,.,.]
+mmy(double[ASZS] a, int[0] ia,
+    double[BSZS] b, int[0] ib)
+{
+    return {
+        [i,j] ->
+            with {
+                ([0] <= [l] < [K0B]) :
+                    mmy2(
+                        a, [i,l],
+                        b, [l,j]
+                    );
+            }
+            : fold(
+                +,
+                genarray(
+                    [M1B, N1B,
+                     M2B, N2B,
+                     M3B, N3B],
+                    0d
+                )
+            )
+
+        | [i,j] < [M0B, N0B]
+    };
+}
+
+
+inline
+double[.,.,.,.,.,.]
+mmy2(double[ASZS] a, int[2] ia,
+     double[BSZS] b, int[2] ib)
+{
+    return {
+        [i,j] ->
+            with {
+                ([0] <= [l] < [K1B]) :
+                    mmy4(
+                        a,
+                        [ia[0], ia[1],
+                         i,     l],
+
+                        b,
+                        [ib[0], ib[1],
+                         l,     j]
+                    );
+            }
+            : fold(
+                +,
+                genarray(
+                    [M2B, N2B,
+                     M3B, N3B],
+                    0d
+                )
+            )
+
+        | [i,j] < [M1B, N1B]
+    };
+}
+
+
+inline
+double[.,.,.,.]
+mmy4(double[ASZS] a, int[4] ia,
+     double[BSZS] b, int[4] ib)
+{
+    return {
+        [i,j] ->
+            with {
+                ([0] <= [l] < [K2B]) :
+                    mmy6(
+                        a,
+                        [ia[0], ia[1],
+                         ia[2], ia[3],
+                         i,     l],
+
+                        b,
+                        [ib[0], ib[1],
+                         ib[2], ib[3],
+                         l,     j]
+                    );
+            }
+            : fold(
+                +,
+                genarray(
+                    [M3B, N3B],
+                    0d
+                )
+            )
+
+        | [i,j] < [M2B, N2B]
+    };
+}
+
+
+inline
+double[.,.]
+mmy6(double[ASZS] a, int[6] ia,
+     double[BSZS] b, int[6] ib)
+{
+    iva =
+        [ia[0], ia[1],
+         ia[2], ia[3],
+         ia[4], ia[5],
+         0,     0];
+
+    ivb =
+        [ib[0], ib[1],
+         ib[2], ib[3],
+         ib[4], ib[5],
+         0,     0];
+
+    return matmul(
+        a,
+        b,
+        row_major(iva, [ASZS]),
+        row_major(ivb, [BSZS])
+    );
+}
+
+inline double[*]
+mmy (double[ASZS] a, int[.] ia,
+     double[BSZS] b, int[.] ib)
+{
+  sha = drop(shape(ia), shape(a));
+  shb = drop(shape(ib), shape(b));
+
+  shco,shci = takedrop(mmshape(sha, shb), 2);
+
+  return {[i,j] -> with {
+                    ([0] <= [l] < [sha[1]]): mmy (a, (ia ++ [i,l]),
+                                                  b, (ib ++ [l,j]));
+                   }: fold(+, genarray(shci, 0d))
+         | [i,j] < shco};
+}
+
+inline double[.,.]
+mmy (double[ASZS] a, int[6] ia,
+     double[BSZS] b, int[6] ib)
+{
+  return matmul(a, b,
+                row_major(ia++[0,0], [ASZS]),
+                row_major(ib++[0,0], [BSZS]));
+}
+
+noinline
+double[*] id(double[*] a) { return a; }
+
+#ifdef CHECK
+double[., .] matmul(double[., .] a, double[., .] b)
+{
+    return {[i, j] -> sum(a[i, .] * b[., j])};
+}
+#endif
+
+int main()
+{
+    iblocked = getInterval("blocked", 1);
+    /* Test matrices are not super unstructured, but have to be careful to keep the result
+     * representable as a double here */
+    a = {[i, j] -> tod((i * K + j) % 10) | [i, j] < [M, K]};
+    b = {[i, j] -> tod((i * N + j) % 10) | [i, j] < [K, N]};
+    a1 = reshape ([M0B, M1B, M2B, M3B, K0B, K1B, K2B, K3B], id(a));
+    b1 = reshape ([K0B, K1B, K2B, K3B, N0B, N1B, N2B, N3B], id(b));
+
+    // Calling mmy
+    a2 = preblock(a1);
+    b2 = preblock(b1);
+
+    start(iblocked);
+    c = mmy(a2, [], b2, []);
+    end(iblocked);
+
+    c = reshape([M,N], unpreblock(c));
+
+#ifdef CHECK
+    c2 = matmul(a, b);
+    printf("Difference between two matrices (vector norm) is %lf\n", sqrt(sum((c - c2) * (c - c2))));
+#else
+    time, unit = returnResultUnit(iblocked);
+    printf("%lf", 2d * tod(M) * tod(K) * tod(N) / time / 1000000000d);
+#endif
+
+    return toi(sum(c));
+}

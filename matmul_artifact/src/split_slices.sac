@@ -1,0 +1,277 @@
+// My experiments to explain chapter on implementation
+// of mm in sac.
+
+/* To go from i, j, k to i, k, j on the outer level */
+
+#define M0B  32
+#define K0B  40
+#define N0B  10
+
+#define M1B  3
+#define K1B  1
+#define N1B  125
+
+#define M2B  15
+#define K2B  1
+#define N2B  1
+
+#define M3B  6
+#define K3B  250
+#define N3B  8
+
+#define N   (N0B * N1B * N2B * N3B)
+#define M   (M0B * M1B * M2B * M3B)
+#define K   (K0B * K1B * K2B * K3B)
+
+
+use Array: all;
+use StdIO: all;
+use Benchmarking: all;
+
+import Shapely: all;
+
+
+external double[M3B, N3B]
+matmul(
+    double[M3B, K3B] a,
+    double[K3B, N3B] b
+);
+
+#pragma linkobj "./kernel_slices.o"
+#pragma linksign [1,2,3]
+#pragma linkname "matmul"
+
+
+#define ASZS M0B, K0B, M1B, K1B, M2B, K2B, M3B, K3B
+#define BSZS K0B, N0B, K1B, N1B, K2B, N2B, K3B, N3B
+
+
+/*
+ * Rank 8 -> rank 6.
+ *
+ * a = [M0,K0,M1,K1,M2,K2,M3,K3]
+ * b = [K0,N0,K1,N1,K2,N2,K3,N3]
+ */
+inline
+double[M0B, N0B,
+       M1B, N1B,
+       M2B, N2B,
+       M3B, N3B]
+mmy(
+    double[M0B, K0B,
+           M1B, K1B,
+           M2B, K2B,
+           M3B, K3B] a,
+
+    double[K0B, N0B,
+           K1B, N1B,
+           K2B, N2B,
+           K3B, N3B] b
+)
+{
+    return {
+        [i,j] ->
+            with {
+                ([0] <= [l] < [K0B]) :
+                    mmy6(
+                        _slice_VxA_([i,l], a),
+                        _slice_VxA_([l,j], b)
+                    );
+            }
+            : fold(
+                +,
+                genarray(
+                    [M1B, N1B,
+                     M2B, N2B,
+                     M3B, N3B],
+                    0d
+                )
+            )
+
+        | [i,j] < [M0B, N0B]
+    };
+}
+
+
+/*
+ * Rank 6 -> rank 4.
+ */
+inline
+double[M1B, N1B,
+       M2B, N2B,
+       M3B, N3B]
+mmy6(
+    double[M1B, K1B,
+           M2B, K2B,
+           M3B, K3B] a,
+
+    double[K1B, N1B,
+           K2B, N2B,
+           K3B, N3B] b
+)
+{
+    return {
+        [i,j] ->
+            with {
+                ([0] <= [l] < [K1B]) :
+                    mmy4(
+                        _slice_VxA_([i,l], a),
+                        _slice_VxA_([l,j], b)
+                    );
+            }
+            : fold(
+                +,
+                genarray(
+                    [M2B, N2B,
+                     M3B, N3B],
+                    0d
+                )
+            )
+
+        | [i,j] < [M1B, N1B]
+    };
+}
+
+
+/*
+ * Rank 4 -> rank 2.
+ */
+inline
+double[M2B, N2B,
+       M3B, N3B]
+mmy4(
+    double[M2B, K2B,
+           M3B, K3B] a,
+
+    double[K2B, N2B,
+           K3B, N3B] b
+)
+{
+    return {
+        [i,j] ->
+            with {
+                ([0] <= [l] < [K2B]) :
+                    mmy2(
+                        _slice_VxA_([i,l], a),
+                        _slice_VxA_([l,j], b)
+                    );
+            }
+            : fold(
+                +,
+                genarray(
+                    [M3B, N3B],
+                    0d
+                )
+            )
+
+        | [i,j] < [M2B, N2B]
+    };
+}
+
+
+/*
+ * Rank-2 base case.
+ */
+inline
+double[M3B, N3B]
+mmy2(
+    double[M3B, K3B] a,
+    double[K3B, N3B] b
+)
+{
+    return matmul(a, b);
+}
+
+
+noinline
+double[*] id(double[*] a)
+{
+    return a;
+}
+
+
+int main()
+{
+    iblocked = getInterval("blocked", 1);
+    itiling = getInterval("tiling", 2);
+    iuntiling = getInterval("untiling", 3);
+
+
+    a = reshape(
+        [M,K],
+        tod(iota(M * K))
+    );
+
+    b = reshape(
+        [K,N],
+        tod(iota(K * N))
+    );
+
+
+    /*
+     * Tiling / preblocking.
+     */
+    start(itiling);
+
+    a1 = reshape(
+        [M0B, M1B, M2B, M3B,
+         K0B, K1B, K2B, K3B],
+        a
+    );
+
+    b1 = reshape(
+        [K0B, K1B, K2B, K3B,
+         N0B, N1B, N2B, N3B],
+        b
+    );
+
+    a2 = preblock(a1);
+    b2 = preblock(b1);
+
+    end(itiling);
+
+
+    time, unit = returnResultUnit(itiling);
+    tile_time = time;
+
+
+    /*
+     * Blocked matrix multiplication.
+     */
+    start(iblocked);
+
+    c = mmy(a2, b2);
+
+    end(iblocked);
+
+
+    time, unit = returnResultUnit(iblocked);
+    mul_time = time;
+
+
+    /*
+     * Undo blocking.
+     */
+    start(iuntiling);
+
+    c = reshape(
+        [M,N],
+        unpreblock(c)
+    );
+
+    end(iuntiling);
+
+
+    time, unit = returnResultUnit(iuntiling);
+    untile_time = time;
+
+
+    printf(
+        "%lf,%lf,%lf",
+        tile_time,
+        mul_time,
+        untile_time
+    );
+
+    return toi(sum(c));
+}

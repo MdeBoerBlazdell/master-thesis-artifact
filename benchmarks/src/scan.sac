@@ -1,0 +1,71 @@
+use StdIO: all;
+use Array: all;
+use RTClock: all;
+use Benchmarking: all;
+use Math: all;
+use CommandLine: all;
+
+#ifdef SLICE
+  #define sel(i,a) _slice_VxA_(i, a)
+#else
+  #define sel(i,a) a[i]
+#endif
+
+#ifndef N
+#define N 10000
+#endif
+
+#define ROWS 8192
+
+inline
+int[n:shp,in:ishp] plus (int[n:shp,in:ishp] a, int[n:shp] m) {
+    return { iv -> a[iv] + m[iv] | iv < shp;
+             iv -> with {} : genarray( ishp, 0) | iv < shp };
+}
+
+inline
+int[n], int foo( int n)
+{
+   return (genarray( [n], 0), 0);
+}
+
+inline
+int[.], int scan (int[.] a){
+    s = 0;
+    for (i=0; i < shape(a)[0]; i++) {
+        t = a[i];
+        a[i] = s;
+        s += t;
+    }
+    return (a,s);
+}
+
+inline
+int[m,n], int scan (int[m,n] a) {
+    a, m = { iv -> scan (sel(iv,a)) | iv < [m];
+             iv -> foo(n)       | iv < [m]};
+    m,s = scan(m);
+    a = plus (a, m);
+    return (a,s);
+}
+
+int main ()
+{
+    elems = N * ROWS;
+
+    a = reshape([ROWS, N], iota(elems));
+
+    // itime = getInterval("time", 1);
+
+     //start(itime);
+    result, sum = scan(a);
+    // end(itime);
+
+     //time, unit = returnResultUnit(itime);
+
+    
+    /* Rows processed per second. */
+    // printf("%lf\n", tod(ROWS) / time);
+
+    return sum(result);
+}

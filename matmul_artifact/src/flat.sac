@@ -1,0 +1,33 @@
+use Array: all;
+use StdIO: all;
+use Benchmarking: all;
+
+inline
+double[., .] matmul(double[., .] a, double[., .] b)
+{
+  return {[i, j] -> sum(a[i, .] * b[., j])};
+}
+
+noinline
+double[., .] id(double[., .] a)
+{
+  return a;
+}
+
+int main()
+{
+  a = id(genarray([8640, 10000], 1d));
+  b = id(genarray([10000, 10000], 1d));
+
+  ibench = getInterval("bench", 1);
+
+  start(ibench);
+  c = matmul(a, b);
+  end(ibench);
+
+  time, unit = returnResultUnit(ibench);
+
+  printf("%lf\n", 2d * 8640d * 10000d * 10000d / time / 1000000000d);
+
+  return toi(sum(c));
+}

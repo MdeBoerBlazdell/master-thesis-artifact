@@ -1,0 +1,714 @@
+
+/*-----------------------------------------------*/
+
+/*
+ *  SAC-Program scan.sac :
+ */
+
+
+/* Additional headers for external function declarations */
+#include <math.h>
+#include "libsac/essentials/message.h"
+#include "libsac/essentials/thecontrollflow.h"
+#include "libsac/essentials/stack.h"
+#include "libsac/interface/sacarg.h"
+
+
+/*
+ *  type definitions
+ */
+
+external classtype World::World;
+external classtype Benchmarking::Benchmarking;
+external classtype Interval::Interval;
+external typealias Benchmarking::Interval;
+external typedef String::string;
+
+external string copy_string (string);
+external string free_string (string);
+
+external classtype MTClock::MTClock;
+external classtype Terminal::Terminal;
+external classtype TermFile::TermFile;
+
+
+/*
+ *  prototypes for externals (FUNDECS)
+ */
+
+external hidden(String::string) String::to_string( char[.] A { ,NN } , int LENGTH { ,NN } )
+/*
+ *  to_string ::  ---
+ */;
+
+external hidden(Terminal::Terminal) *, hidden(TermFile::TermFile) * TermFile::printf( hidden(Terminal::Terminal) *_rso_138_TheTerminal { ,NN } , hidden(TermFile::TermFile) *_rso_137_stdout { ,NN } , hidden(String::string) FORMAT { ,NN } , ...)
+/*
+ *  printf ::  ---
+ */;
+
+
+
+/*
+ *  FFI wrap/unwrap/is function headers (TYPEDEFS)
+ */
+
+
+
+/*
+ *  prototypes for locals (FUNDEFS)
+ */
+
+external hidden(World::World) * World:_INIT::init_TheWorld( hidden(World::World) *_OI_object { ,NN } )
+/*
+ *  init_TheWorld ::  ---
+ */;
+
+external hidden(World::World) *, hidden(Benchmarking::Benchmarking) * Benchmarking:_INIT::init_TheBenchmarkObject( hidden(World::World) *_rso_1048_TheWorld { ,NN } , hidden(Benchmarking::Benchmarking) *_OI_object { ,NN } )
+/*
+ *  init_TheBenchmarkObject ::  ---
+ */;
+
+external hidden(Benchmarking::Benchmarking) *, hidden(Interval::Interval) * Benchmarking::getInterval( hidden(Benchmarking::Benchmarking) *_rso_1050_TheBenchmarkObject { ,NN } , hidden(String::string) interval_name { ,NN } , int interval_number { ,NN } )
+/*
+ *  getInterval ::  ---
+ */;
+
+external hidden(World::World) *, hidden(MTClock::MTClock) * MTClock:_INIT::init_TheMTClock( hidden(World::World) *_rso_22_TheWorld { ,NN } , hidden(MTClock::MTClock) *_OI_object { ,NN } )
+/*
+ *  init_TheMTClock ::  ---
+ */;
+
+external hidden(Benchmarking::Benchmarking) *, hidden(MTClock::MTClock) *, hidden(Interval::Interval) * Benchmarking::start( hidden(Benchmarking::Benchmarking) *_rso_1055_TheBenchmarkObject { ,NN } , hidden(MTClock::MTClock) *_rso_1054_TheMTClock { ,NN } , hidden(Interval::Interval) *interval { ,NN } )
+/*
+ *  start ::  ---
+ */;
+
+external hidden(Benchmarking::Benchmarking) *, hidden(MTClock::MTClock) *, hidden(Interval::Interval) * Benchmarking::end( hidden(Benchmarking::Benchmarking) *_rso_1057_TheBenchmarkObject { ,NN } , hidden(MTClock::MTClock) *_rso_1056_TheMTClock { ,NN } , hidden(Interval::Interval) *interval { ,NN } )
+/*
+ *  end ::  ---
+ */;
+
+external hidden(Benchmarking::Benchmarking) *, hidden(Interval::Interval) *, double, hidden(String::string) Benchmarking::returnResultUnit( hidden(Benchmarking::Benchmarking) *_rso_1058_TheBenchmarkObject { ,NN } , hidden(Interval::Interval) *int1 { ,NN } )
+/*
+ *  returnResultUnit ::  ---
+ */;
+
+external hidden(World::World) *, hidden(Terminal::Terminal) * Terminal:_INIT::init_TheTerminal( hidden(World::World) *_rso_8_TheWorld { ,NN } , hidden(Terminal::Terminal) *_OI_object { ,NN } )
+/*
+ *  init_TheTerminal ::  ---
+ */;
+
+external hidden(Terminal::Terminal) *, hidden(TermFile::TermFile) * TermFile:_INIT::init_stdout( hidden(Terminal::Terminal) *_rso_106_TheTerminal { ,NN } , hidden(TermFile::TermFile) *_OI_object { ,NN } )
+/*
+ *  init_stdout ::  ---
+ */;
+
+
+
+/*
+ *  global objects
+ */
+
+external hidden(World::World) World::TheWorld;
+
+external hidden(Benchmarking::Benchmarking) Benchmarking::TheBenchmarkObject;
+
+external hidden(MTClock::MTClock) MTClock::TheMTClock;
+
+external hidden(Terminal::Terminal) Terminal::TheTerminal;
+
+external hidden(TermFile::TermFile) TermFile::stdout;
+
+
+
+/*
+ *  function definitions (FUNDEFS)
+ */
+
+
+
+/****************************************************************************
+ * Wrapper function:
+ * _MAIN::main(...) [ wrapper ]
+ ****************************************************************************/
+hidden(Benchmarking::Benchmarking) *, hidden(MTClock::MTClock) *, hidden(Terminal::Terminal) *, hidden(TermFile::TermFile) *, hidden(World::World) *, int _MAIN::main( hidden(Benchmarking::Benchmarking) *_rso_105_TheBenchmarkObject { ,NN } , hidden(MTClock::MTClock) *_rso_104_TheMTClock { ,NN } , hidden(Terminal::Terminal) *_rso_103_TheTerminal { ,NN } , hidden(TermFile::TermFile) *_rso_102_stdout { ,NN } , hidden(World::World) *_rso_101_TheWorld { ,NN } )
+/*
+ *  main ::  ---
+ */
+{ 
+  hidden(Benchmarking::Benchmarking) _cwc_208 { , NN } ; 
+  hidden(MTClock::MTClock) _cwc_207 { , NN } ; 
+  hidden(Terminal::Terminal) _cwc_206 { , NN } ; 
+  hidden(TermFile::TermFile) _cwc_205 { , NN } ; 
+  hidden(World::World) _cwc_204 { , NN } ; 
+  int _cwc_203 { , NN } ; 
+
+  _cwc_208, _cwc_207, _cwc_206, _cwc_205, _cwc_204, _cwc_203 = _MAIN::main( _rso_105_TheBenchmarkObject, _rso_104_TheMTClock, _rso_103_TheTerminal, _rso_102_stdout, _rso_101_TheWorld) ; 
+  return( _cwc_208, _cwc_207, _cwc_206, _cwc_205, _cwc_204, _cwc_203); 
+}
+
+
+
+/****************************************************************************
+ * _MAIN::main(...) [ body ]
+ ****************************************************************************/
+hidden(Benchmarking::Benchmarking) *, hidden(MTClock::MTClock) *, hidden(Terminal::Terminal) *, hidden(TermFile::TermFile) *, hidden(World::World) *, int _MAIN::main( hidden(Benchmarking::Benchmarking) *_rso_110_TheBenchmarkObject { ,NN } , hidden(MTClock::MTClock) *_rso_109_TheMTClock { ,NN } , hidden(Terminal::Terminal) *_rso_108_TheTerminal { ,NN } , hidden(TermFile::TermFile) *_rso_107_stdout { ,NN } , hidden(World::World) *_rso_106_TheWorld { ,NN } )
+/*
+ *  main ::  ---
+ */
+{ 
+  bool _emrb_1624_val { , NN } ; 
+  bool _emrb_1623_mem { , NN } ; 
+  int[10000] _emlr_1618__pinl_1079__flat_73 { , NN } ; 
+  int[10000] _emlr_1617__pinl_1079__flat_73 { , NN } ; 
+  int{0} _emlr_1616__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int _emlr_1615__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int{0} _emlr_1614__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int _emlr_1613__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int[8192] _emlr_1612__pinl_1089_m__SSA0_1 { , NN } ; 
+  int{0} _emlr_1610__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int _emlr_1609__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int{0} _emlr_1608__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int _emlr_1607__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int _emal_1591__isaa_1344__rso_106_TheWorld { , NN } ; 
+  int _emal_1590__flat_75 { , NN } ; 
+  int _emal_1589_val { , NN } ; 
+  int[81920000] _emal_1588__pinl_1061__flat_764 { , NN } ; 
+  int[8192,10000] _emal_1586_a { , NN } ; 
+  int _emal_1585__flat_88 { , NN } ; 
+  int _emal_1584__flat_87 { , NN } ; 
+  char[5] _emal_1583__flat_81 { , NN } ; 
+  int{0} _emal_1582_val { , NN } ; 
+  int[10000] _emal_1581__pinl_1249__flat_45 { , NN } ; 
+  int _emal_1580_val { , NN } ; 
+  int[10000] _emal_1579_val { , NN } ; 
+  int[10000] _emal_1578_mem { , NN } ; 
+  int _emal_1577__ivesli_1522 { , NN } ; 
+  int[10000] _emal_1576__pinl_1079__flat_73 { , NN } ; 
+  int[8192,10000] _emal_1575__pinl_1088_a__SSA0_1 { , NN } ; 
+  int[8192] _emal_1574__pinl_1089_m__SSA0_1 { , NN } ; 
+  int _emal_1573__iveras_1550 { , NN } ; 
+  int _emal_1572__iveras_1551 { , NN } ; 
+  int _emal_1569__ivesli_1521 { , NN } ; 
+  int _emal_1568__pinl_1216__mose_90 { , NN } ; 
+  int _emal_1567__ivesli_1517 { , NN } ; 
+  int _emal_1566_val { , NN } ; 
+  int _emal_1565__ivesli_1519 { , NN } ; 
+  int _emal_1563__pinl_1190__mose_90__SSA2_1 { , NN } ; 
+  int[10000] _emal_1561__pinl_1157__flat_2499 { , NN } ; 
+  double _emal_1559__pinl_1268__flat_305 { , NN } ; 
+  char[5] _emal_1558__flat_90 { , NN } ; 
+  int _emal_1557__ivesli_1515 { , NN } ; 
+  int _emal_1556__pinl_1274__flat_103 { , NN } ; 
+  int _ufiv_1552__pinl_1287__flat_272 { , NN } ; 
+  int _iveras_1551 { , NN } ; 
+  int _iveras_1550 { , NN } ; 
+  int _ivesli_1522 { , NN } ; 
+  int _ivesli_1521 { , NN } ; 
+  int _ivesli_1520 { , NN } ; 
+  int _ivesli_1519 { , NN } ; 
+  int _ivesli_1517 { , NN } ; 
+  int _ivesli_1515 { , NN } ; 
+  int _wlidx_1514__pinl_1157__flat_2499 { , NN } ; 
+  int _wlidx_1513__pinl_1092_a__SSA0_3 { , NN } ; 
+  int _wlidx_1512__pinl_1089_m__SSA0_1 { , NN } ; 
+  int _wlidx_1511__pinl_1088_a__SSA0_1 { , NN } ; 
+  int _wlidx_1510__pinl_1249__flat_45 { , NN } ; 
+  int _wlidx_1509__pinl_1061__flat_764 { , NN } ; 
+  int{0} _isaa_1344__rso_106_TheWorld { , NN } ; 
+  int[8192] _pinl_1331_a__SSA0_1 { , NN } ;  /* declared: int[.] */
+  int[10000] _pinl_1329_a__SSA0_1 { , NN } ;  /* declared: int[.] */
+  int _pinl_1328_s__SSA0_1 { , NN } ; 
+  int _pinl_1190__mose_90__SSA2_1 { , NN } ; 
+  int _pinl_1070_i { , NN } ; 
+  int[1] _pinl_1069__flat_773 { , NN } ; 
+  int[81920000] _pinl_1061__flat_764 { , NN } ; 
+  int _pinl_1256__eat_124 { , NN } ; 
+  int[1] _pinl_1255__hzgwl_172 { , NN } ; 
+  int[10000] _pinl_1249__flat_45 { , NN } ; 
+  int _pinl_1216__mose_90 { , NN } ; 
+  int _pinl_1165__eat_120 { , NN } ; 
+  int _pinl_1164__mose_420 { , NN } ; 
+  int[1] _pinl_1163_iv { , NN } ; 
+  int[10000] _pinl_1157__flat_2499 { , NN } ; 
+  int _pinl_1143__eat_123 { , NN } ; 
+  int[1] _pinl_1140_iv { , NN } ; 
+  int _pinl_1094__eat_117 { , NN } ; 
+  int[8192,10000] _pinl_1092_a__SSA0_3 { , NN } ;  /* declared: int[.,.] */
+  int[8192] _pinl_1089_m__SSA0_1 { , NN } ; 
+  int[8192,10000] _pinl_1088_a__SSA0_1 { , NN } ;  /* declared: int[.,.] */
+  int[1] _pinl_1084_iv { , NN } ; 
+  int[10000] _pinl_1079__flat_73 { , NN } ; 
+  double _pinl_1268__flat_305 { , NN } ; 
+  int _pinl_1287__flat_272 { , NN } ; 
+  int _pinl_1281__eat_119 { , NN } ; 
+  int _pinl_1280__eat_118 { , NN } ; 
+  int _pinl_1278__ea_476__flat_99 { , NN } ; 
+  int[2] _pinl_1277_iv { , NN } ; 
+  int _pinl_1274__flat_103 { , NN } ; 
+  int _pinl_1271__flat_99 { , NN } ; 
+  hidden(TermFile::TermFile) _rso_107_stdout__SSA0_2 { , NN } ;  /* declared: TermFile::TermFile */
+  hidden(Terminal::Terminal) _rso_108_TheTerminal__SSA0_2 { , NN } ;  /* declared: Terminal::Terminal */
+  hidden(Interval::Interval) itime__SSA0_3 { , NN } ; 
+  hidden(Benchmarking::Benchmarking) _rso_110_TheBenchmarkObject__SSA0_5 { , NN } ;  /* declared: Benchmarking::Benchmarking */
+  hidden(Interval::Interval) itime__SSA0_2 { , NN } ; 
+  hidden(MTClock::MTClock) _rso_109_TheMTClock__SSA0_3 { , NN } ;  /* declared: MTClock::MTClock */
+  hidden(Benchmarking::Benchmarking) _rso_110_TheBenchmarkObject__SSA0_4 { , NN } ;  /* declared: Benchmarking::Benchmarking */
+  hidden(Interval::Interval) itime__SSA0_1 { , NN } ; 
+  hidden(MTClock::MTClock) _rso_109_TheMTClock__SSA0_2 { , NN } ;  /* declared: MTClock::MTClock */
+  hidden(Benchmarking::Benchmarking) _rso_110_TheBenchmarkObject__SSA0_3 { , NN } ;  /* declared: Benchmarking::Benchmarking */
+  hidden(Benchmarking::Benchmarking) _rso_110_TheBenchmarkObject__SSA0_2 { , NN } ;  /* declared: Benchmarking::Benchmarking */
+  hidden(TermFile::TermFile) _rso_107_stdout__SSA0_1 { , NN } ;  /* declared: TermFile::TermFile */
+  hidden(Terminal::Terminal) _rso_108_TheTerminal__SSA0_1 { , NN } ;  /* declared: Terminal::Terminal */
+  hidden(MTClock::MTClock) _rso_109_TheMTClock__SSA0_1 { , NN } ;  /* declared: MTClock::MTClock */
+  hidden(Benchmarking::Benchmarking) _rso_110_TheBenchmarkObject__SSA0_1 { , NN } ;  /* declared: Benchmarking::Benchmarking */
+  hidden(World::World) _rso_106_TheWorld__SSA0_1 { , NN } ;  /* declared: World::World */
+  hidden(String::string) unit { , NN } ; 
+  double time { , NN } ; 
+  hidden(Interval::Interval) itime { , NN } ; 
+  int[8192,10000] a { , NN } ; 
+  char[5]{%,l...} _flat_90 { , NN } ; 
+  hidden(String::string) _flat_89 { , NN } ; 
+  int{1} _flat_88 { , NN } ; 
+  int{4} _flat_87 { , NN } ; 
+  char[5]{t,i...} _flat_81 { , NN } ; 
+  hidden(String::string) _flat_80 { , NN } ; 
+  int{819...} _flat_75 { , NN } ; 
+
+  _emal_1591__isaa_1344__rso_106_TheWorld = _alloc_( 1, 0, [:int]); 
+  _isaa_1344__rso_106_TheWorld = _fill_( 0, _emal_1591__isaa_1344__rso_106_TheWorld); 
+  _rso_106_TheWorld__SSA0_1, _rso_110_TheBenchmarkObject__SSA0_1, _rso_109_TheMTClock__SSA0_1, _rso_108_TheTerminal__SSA0_1, _rso_107_stdout__SSA0_1 = _MAIN:_INIT::init( _rso_106_TheWorld, _rso_110_TheBenchmarkObject, _rso_109_TheMTClock, _rso_108_TheTerminal, _rso_107_stdout) ; 
+  _emal_1590__flat_75 = _alloc_( 1, 0, [:int]); 
+  _flat_75 = _fill_( 8192, _emal_1590__flat_75); 
+  _emal_1588__pinl_1061__flat_764 = _alloc_( 1, 1, [ 81920000 ]); 
+  _pinl_1070_i = _alloc_( 1, 0, [:int]); 
+  _wlidx_1509__pinl_1061__flat_764 = _alloc_( 1, 0, [:int]); 
+  _pinl_1061__flat_764 = with2 (_pinl_1069__flat_773=[_pinl_1070_i] (IDXS:_wlidx_1509__pinl_1061__flat_764))
+      /********** operators: **********/
+      op_0 =
+        { 
+          _emal_1589_val = _wl_assign_( _pinl_1070_i, _emal_1588__pinl_1061__flat_764, _pinl_1069__flat_773, _wlidx_1509__pinl_1061__flat_764); 
+        } : _emal_1589_val ; 
+      /********** segment 0: **********
+       * index domain: [ 0 ] -> [ 81920000 ]
+       * sv: [ 1 ]
+       * homsv: [ 1 ]
+       */
+      (0 -> 81920000), step[0] 1
+        (0 --> 1): op_0
+      /********** conexpr: **********/
+      genarray( [ 81920000 ], _isaa_1344__rso_106_TheWorld, _emal_1588__pinl_1061__flat_764, IDX(_wlidx_1509__pinl_1061__flat_764)); 
+  _free_( _pinl_1070_i); 
+  _free_( _wlidx_1509__pinl_1061__flat_764); 
+  _emal_1586_a = _reshape_VxA_( 1, 2, [ 8192, 10000 ], _pinl_1061__flat_764); 
+  a = _fill_( _noop_( _pinl_1061__flat_764), _emal_1586_a); 
+  _emal_1585__flat_88 = _alloc_( 1, 0, [:int]); 
+  _flat_88 = _fill_( 1, _emal_1585__flat_88); 
+  _emal_1584__flat_87 = _alloc_( 1, 0, [:int]); 
+  _flat_87 = _fill_( 4, _emal_1584__flat_87); 
+  _emal_1583__flat_81 = _alloc_( 1, 1, [ 5 ]); 
+  _flat_81 = _fill_( [ 't', 'i', 'm', 'e', '\0' ], _emal_1583__flat_81); 
+  _flat_80 = String::to_string( _flat_81, _flat_87) ; 
+  _dec_rc_( _flat_81, 1); 
+  _rso_110_TheBenchmarkObject__SSA0_2, itime = Benchmarking::getInterval( _rso_110_TheBenchmarkObject__SSA0_1, _flat_80, _flat_88) ; 
+  _rso_110_TheBenchmarkObject__SSA0_3, _rso_109_TheMTClock__SSA0_2, itime__SSA0_1 = Benchmarking::start( _rso_110_TheBenchmarkObject__SSA0_2, _rso_109_TheMTClock__SSA0_1, itime) ; 
+  _emal_1581__pinl_1249__flat_45 = _alloc_( 1, 1, [ 10000 ]); 
+  _pinl_1256__eat_124 = _alloc_( 1, 0, [:int]); 
+  _wlidx_1510__pinl_1249__flat_45 = _alloc_( 1, 0, [:int]); 
+  _pinl_1249__flat_45 = with2 (_pinl_1255__hzgwl_172=[_pinl_1256__eat_124] (IDXS:_wlidx_1510__pinl_1249__flat_45))
+      /********** operators: **********/
+      op_0 =
+        { 
+          _emal_1582_val = _wl_assign_( _isaa_1344__rso_106_TheWorld, _emal_1581__pinl_1249__flat_45, _pinl_1255__hzgwl_172, _wlidx_1510__pinl_1249__flat_45); 
+        } : _emal_1582_val ; 
+      /********** segment 0: **********
+       * index domain: [ 0 ] -> [ 10000 ]
+       * sv: [ 1 ]
+       * homsv: [ 1 ]
+       */
+      (0 -> 10000), step[0] 1
+        (0 --> 1): op_0
+      /********** conexpr: **********/
+      genarray( [ 10000 ], _isaa_1344__rso_106_TheWorld, _emal_1581__pinl_1249__flat_45, IDX(_wlidx_1510__pinl_1249__flat_45)); 
+  _free_( _pinl_1256__eat_124); 
+  _free_( _wlidx_1510__pinl_1249__flat_45); 
+  _emal_1574__pinl_1089_m__SSA0_1 = _alloc_( 1, 1, [ 8192 ]); 
+  _emal_1575__pinl_1088_a__SSA0_1 = _alloc_( 1, 2, [ 8192, 10000 ]); 
+  _pinl_1094__eat_117 = _alloc_( 1, 0, [:int]); 
+  _wlidx_1511__pinl_1088_a__SSA0_1 = _alloc_( 1, 0, [:int]); 
+  _wlidx_1512__pinl_1089_m__SSA0_1 = _alloc_( 1, 0, [:int]); 
+  _pinl_1088_a__SSA0_1, _pinl_1089_m__SSA0_1 = with2 (_pinl_1084_iv=[_pinl_1094__eat_117] (IDXS:_wlidx_1511__pinl_1088_a__SSA0_1, _wlidx_1512__pinl_1089_m__SSA0_1))
+      /********** operators: **********/
+      op_0 =
+        { 
+          _inc_rc_( a, 1); 
+          _emal_1577__ivesli_1522 = _alloc_( 1, 0, [:int]); 
+          _ivesli_1522 = _fill_( _idxs2offset_( [ 8192, 10000 ], _pinl_1094__eat_117), _emal_1577__ivesli_1522); 
+          _emal_1576__pinl_1079__flat_73 = _idx_slice_alloc_( 1, a, _ivesli_1522); 
+          _free_( _ivesli_1522); 
+          _pinl_1079__flat_73 = _fill_( _noop_( _emal_1576__pinl_1079__flat_73), _emal_1576__pinl_1079__flat_73); 
+          _emlr_1617__pinl_1079__flat_73 = _alloc_or_reuse_( 1, _dim_A_( _pinl_1079__flat_73), _shape_A_( _pinl_1079__flat_73), _pinl_1079__flat_73); 
+          _emrb_1623_mem = _alloc_( 1, 0, [:int]); 
+          _emrb_1624_val = _fill_( _isreused_( _emlr_1617__pinl_1079__flat_73, _pinl_1079__flat_73), _emrb_1623_mem); 
+          _emlr_1618__pinl_1079__flat_73 = _MAIN::main__ReuseCond_0( _emrb_1624_val, _pinl_1079__flat_73, _emlr_1617__pinl_1079__flat_73) ; 
+          _emlr_1615__isaa_1344__rso_106_TheWorld = _alloc_( 1, _dim_A_( _isaa_1344__rso_106_TheWorld), _shape_A_( _isaa_1344__rso_106_TheWorld)); 
+          _emlr_1616__isaa_1344__rso_106_TheWorld = _fill_( _copy_( _isaa_1344__rso_106_TheWorld), _emlr_1615__isaa_1344__rso_106_TheWorld); 
+          _emlr_1613__isaa_1344__rso_106_TheWorld = _alloc_( 1, _dim_A_( _isaa_1344__rso_106_TheWorld), _shape_A_( _isaa_1344__rso_106_TheWorld)); 
+          _emlr_1614__isaa_1344__rso_106_TheWorld = _fill_( _copy_( _isaa_1344__rso_106_TheWorld), _emlr_1613__isaa_1344__rso_106_TheWorld); 
+          _pinl_1328_s__SSA0_1, _pinl_1329_a__SSA0_1 = _MAIN::_dup_1330_scan__Loop_0( _emlr_1614__isaa_1344__rso_106_TheWorld, _emlr_1616__isaa_1344__rso_106_TheWorld, _emlr_1618__pinl_1079__flat_73) ; 
+          _emal_1580_val = _wl_assign_( _pinl_1328_s__SSA0_1, _emal_1574__pinl_1089_m__SSA0_1, _pinl_1084_iv, _wlidx_1512__pinl_1089_m__SSA0_1); 
+          _free_( _pinl_1328_s__SSA0_1); 
+          _emal_1578_mem = _suballoc_( 1, _emal_1575__pinl_1088_a__SSA0_1, _wlidx_1511__pinl_1088_a__SSA0_1, 1); 
+          _emal_1579_val = _fill_( _copy_( _pinl_1329_a__SSA0_1), _emal_1578_mem); 
+          _free_( _pinl_1329_a__SSA0_1); 
+        } : _emal_1579_val, _emal_1580_val ; 
+      /********** segment 0: **********
+       * index domain: [ 0 ] -> [ 8192 ]
+       * sv: [ 1 ]
+       * homsv: [ 1 ]
+       */
+      (0 -> 8192), step[0] 1
+        (0 --> 1): op_0
+      /********** conexpr: **********/
+      genarray( [ 8192 ], _pinl_1249__flat_45, _emal_1575__pinl_1088_a__SSA0_1, IDX(_wlidx_1511__pinl_1088_a__SSA0_1)),
+      genarray( [ _flat_75 ], _isaa_1344__rso_106_TheWorld, _emal_1574__pinl_1089_m__SSA0_1, IDX(_wlidx_1512__pinl_1089_m__SSA0_1)); 
+  _free_( _flat_75); 
+  _dec_rc_( a, 1); 
+  _free_( _pinl_1094__eat_117); 
+  _free_( _wlidx_1511__pinl_1088_a__SSA0_1); 
+  _free_( _wlidx_1512__pinl_1089_m__SSA0_1); 
+  _emlr_1612__pinl_1089_m__SSA0_1 = _fill_( _noop_( _pinl_1089_m__SSA0_1), _pinl_1089_m__SSA0_1); 
+  _emlr_1609__isaa_1344__rso_106_TheWorld = _alloc_( 1, _dim_A_( _isaa_1344__rso_106_TheWorld), _shape_A_( _isaa_1344__rso_106_TheWorld)); 
+  _emlr_1610__isaa_1344__rso_106_TheWorld = _fill_( _copy_( _isaa_1344__rso_106_TheWorld), _emlr_1609__isaa_1344__rso_106_TheWorld); 
+  _emlr_1607__isaa_1344__rso_106_TheWorld = _alloc_( 1, _dim_A_( _isaa_1344__rso_106_TheWorld), _shape_A_( _isaa_1344__rso_106_TheWorld)); 
+  _emlr_1608__isaa_1344__rso_106_TheWorld = _fill_( _copy_( _isaa_1344__rso_106_TheWorld), _emlr_1607__isaa_1344__rso_106_TheWorld); 
+  _pinl_1331_a__SSA0_1 = _MAIN::_dup_1332_scan__Loop_0( _emlr_1608__isaa_1344__rso_106_TheWorld, _emlr_1610__isaa_1344__rso_106_TheWorld, _emlr_1612__pinl_1089_m__SSA0_1) ; 
+  _emal_1573__iveras_1550 = _alloc_( 1, 0, [:int]); 
+  _iveras_1550 = _fill_( 0, _emal_1573__iveras_1550); 
+  _emal_1572__iveras_1551 = _alloc_( 1, 0, [:int]); 
+  _iveras_1551 = _fill_( 0, _emal_1572__iveras_1551); 
+  _pinl_1143__eat_123 = _alloc_( 1, 0, [:int]); 
+  _wlidx_1513__pinl_1092_a__SSA0_3 = _alloc_( 1, 0, [:int]); 
+  _pinl_1092_a__SSA0_3 = with2 (_pinl_1140_iv=[_pinl_1143__eat_123] (IDXS:_wlidx_1513__pinl_1092_a__SSA0_3))
+      /********** operators: **********/
+      op_0 =
+        { 
+          _emal_1569__ivesli_1521 = _alloc_( 1, 0, [:int]); 
+          _ivesli_1521 = _fill_( _idxs2offset_( [ 8192 ], _pinl_1143__eat_123), _emal_1569__ivesli_1521); 
+          _emal_1568__pinl_1216__mose_90 = _alloc_( 1, 0, [:int]); 
+          _pinl_1216__mose_90 = _fill_( _idx_sel_( _ivesli_1521, _pinl_1331_a__SSA0_1), _emal_1568__pinl_1216__mose_90); 
+          _free_( _ivesli_1521); 
+          _emal_1567__ivesli_1517 = _alloc_( 1, 0, [:int]); 
+          _ivesli_1517 = _fill_( _idxs2offset_( [ 8192, 10000 ], _pinl_1143__eat_123, _iveras_1550), _emal_1567__ivesli_1517); 
+          _emal_1561__pinl_1157__flat_2499 = _suballoc_( 1, _pinl_1088_a__SSA0_1, _wlidx_1513__pinl_1092_a__SSA0_3, 1); 
+          _pinl_1165__eat_120 = _alloc_( 1, 0, [:int]); 
+          _wlidx_1514__pinl_1157__flat_2499 = _alloc_( 1, 0, [:int]); 
+          _pinl_1157__flat_2499 = with2 (_pinl_1163_iv=[_pinl_1165__eat_120] (IDXS:_wlidx_1514__pinl_1157__flat_2499))
+              /********** operators: **********/
+              op_0 =
+                { 
+                  _emal_1565__ivesli_1519 = _alloc_( 1, 0, [:int]); 
+                  _ivesli_1519 = _fill_( _idxs2offset_( [ 8192, 10000 ], _iveras_1551, _pinl_1165__eat_120), _emal_1565__ivesli_1519); 
+                  _ivesli_1520 = _fill_( _add_SxS_( _ivesli_1517, _ivesli_1519), _ivesli_1519); 
+                  _emal_1563__pinl_1190__mose_90__SSA2_1 = _alloc_( 1, 0, [:int]); 
+                  _pinl_1190__mose_90__SSA2_1 = _fill_( _idx_sel_( _ivesli_1520, _pinl_1088_a__SSA0_1), _emal_1563__pinl_1190__mose_90__SSA2_1); 
+                  _free_( _ivesli_1520); 
+                  _pinl_1164__mose_420 = _fill_( _add_SxS_( _pinl_1190__mose_90__SSA2_1, _pinl_1216__mose_90), _pinl_1190__mose_90__SSA2_1); 
+                  _emal_1566_val = _wl_assign_( _pinl_1164__mose_420, _emal_1561__pinl_1157__flat_2499, _pinl_1163_iv, _wlidx_1514__pinl_1157__flat_2499); 
+                  _free_( _pinl_1164__mose_420); 
+                } : _emal_1566_val ; 
+              /********** segment 0: **********
+               * index domain: [ 0 ] -> [ 10000 ]
+               * sv: [ 1 ]
+               * homsv: [ 1 ]
+               */
+              (0 -> 10000), step[0] 1
+                (0 --> 1): op_0
+              /********** conexpr: **********/
+              genarray( [ 10000 ], _isaa_1344__rso_106_TheWorld, _emal_1561__pinl_1157__flat_2499, IDX(_wlidx_1514__pinl_1157__flat_2499)); 
+          _free_( _pinl_1165__eat_120); 
+          _free_( _pinl_1216__mose_90); 
+          _free_( _wlidx_1514__pinl_1157__flat_2499); 
+          _free_( _ivesli_1517); 
+        } : _pinl_1157__flat_2499 ; 
+      /********** segment 0: **********
+       * index domain: [ 0 ] -> [ 8192 ]
+       * sv: [ 1 ]
+       * homsv: [ 1 ]
+       */
+      (0 -> 8192), step[0] 1
+        (0 --> 1): op_0
+      /********** conexpr: **********/
+      genarray( [ 8192 ], _pinl_1249__flat_45, _pinl_1088_a__SSA0_1, IDX(_wlidx_1513__pinl_1092_a__SSA0_3)); 
+  _free_( _pinl_1249__flat_45); 
+  _free_( _pinl_1143__eat_123); 
+  _free_( _pinl_1331_a__SSA0_1); 
+  _free_( _wlidx_1513__pinl_1092_a__SSA0_3); 
+  _free_( _iveras_1550); 
+  _free_( _iveras_1551); 
+  _rso_110_TheBenchmarkObject__SSA0_4, _rso_109_TheMTClock__SSA0_3, itime__SSA0_2 = Benchmarking::end( _rso_110_TheBenchmarkObject__SSA0_3, _rso_109_TheMTClock__SSA0_2, itime__SSA0_1) ; 
+  _rso_110_TheBenchmarkObject__SSA0_5, itime__SSA0_3, time, unit = Benchmarking::returnResultUnit( _rso_110_TheBenchmarkObject__SSA0_4, itime__SSA0_2) ; 
+  _dec_rc_( unit, 1); 
+  _dec_rc_( itime__SSA0_3, 1); 
+  _emal_1559__pinl_1268__flat_305 = _alloc_( 1, 0, [:int]); 
+  _pinl_1268__flat_305 = _fill_( _div_SxS_( 8192.0, time), _emal_1559__pinl_1268__flat_305); 
+  _dec_rc_( time, 1); 
+  _emal_1558__flat_90 = _alloc_( 1, 1, [ 5 ]); 
+  _flat_90 = _fill_( [ '%', 'l', 'f', '\n', '\0' ], _emal_1558__flat_90); 
+  _flat_89 = String::to_string( _flat_90, _flat_87) ; 
+  _dec_rc_( _flat_87, 1); 
+  _dec_rc_( _flat_90, 1); 
+  _rso_108_TheTerminal__SSA0_2, _rso_107_stdout__SSA0_2 = StdIO::printf( _rso_108_TheTerminal__SSA0_1, _rso_107_stdout__SSA0_1, _flat_89, _pinl_1268__flat_305) ; 
+  _dec_rc_( _pinl_1268__flat_305, 1); 
+  _pinl_1281__eat_119 = _alloc_( 1, 0, [:int]); 
+  _pinl_1280__eat_118 = _alloc_( 1, 0, [:int]); 
+  _pinl_1271__flat_99 = with2 (_pinl_1277_iv=[_pinl_1281__eat_119, _pinl_1280__eat_118])
+      /********** operators: **********/
+      op_0 =
+        { 
+          _pinl_1278__ea_476__flat_99 = _accu_( _pinl_1277_iv, _isaa_1344__rso_106_TheWorld); 
+          _emal_1557__ivesli_1515 = _alloc_( 1, 0, [:int]); 
+          _ivesli_1515 = _fill_( _idxs2offset_( [ 8192, 10000 ], _pinl_1281__eat_119, _pinl_1280__eat_118), _emal_1557__ivesli_1515); 
+          _emal_1556__pinl_1274__flat_103 = _alloc_( 1, 0, [:int]); 
+          _pinl_1274__flat_103 = _fill_( _idx_sel_( _ivesli_1515, _pinl_1092_a__SSA0_3), _emal_1556__pinl_1274__flat_103); 
+          _free_( _ivesli_1515); 
+          _pinl_1287__flat_272 = _fill_( _add_SxS_( _pinl_1274__flat_103, _pinl_1278__ea_476__flat_99), _pinl_1274__flat_103); 
+          _dec_rc_( _pinl_1278__ea_476__flat_99, 1); 
+          _ufiv_1552__pinl_1287__flat_272 = _unshare_( _pinl_1287__flat_272, _pinl_1277_iv); 
+        } : _ufiv_1552__pinl_1287__flat_272 ; 
+      /********** segment 0: **********
+       * index domain: [ 0, 0 ] -> [ 8192, 10000 ]
+       * sv: [ 1, 1 ]
+       * homsv: [ 1, 1 ]
+       */
+      (0 -> 8192), step[0] 1
+        (0 --> 1):
+          (0 -> 10000), step[1] 1
+            (0 --> 1): op_0
+      /********** conexpr: **********/
+      fold( ScalarArith::+ () (), _isaa_1344__rso_106_TheWorld); 
+  _free_( _pinl_1280__eat_118); 
+  _free_( _pinl_1281__eat_119); 
+  _free_( _pinl_1092_a__SSA0_3); 
+  return( _rso_110_TheBenchmarkObject__SSA0_5, _rso_109_TheMTClock__SSA0_3, _rso_108_TheTerminal__SSA0_2, _rso_107_stdout__SSA0_2, _rso_106_TheWorld__SSA0_1, _pinl_1271__flat_99); 
+}
+
+
+
+/****************************************************************************
+ * Cond function:
+ * _MAIN::main__ReuseCond_0(...) [ body ]
+ ****************************************************************************/
+int[10000] _MAIN::main__ReuseCond_0( bool _emrb_1619 { ,NN } , int[10000] _pinl_1079__flat_73 { ,NN } , int[10000] _emlr_1617__pinl_1079__flat_73 { ,NN } )
+/*
+ *  main__ReuseCond_0 ::  ---
+ */
+{ 
+  int[10000] _emrb_1622 { , NN } ; 
+  int[10000] _dup_1621__emlr_1618__pinl_1079__flat_73 { , NN } ; 
+  int[10000] _dup_1620__emlr_1618__pinl_1079__flat_73 { , NN } ; 
+
+  if (_emrb_1619) 
+  { 
+    _free_( _pinl_1079__flat_73); 
+    _dec_rc_( _emrb_1619, 1); 
+    _dup_1620__emlr_1618__pinl_1079__flat_73 = _fill_( _noop_( _pinl_1079__flat_73), _emlr_1617__pinl_1079__flat_73); 
+  }
+  else
+  { 
+    _dec_rc_( _emrb_1619, 1); 
+    _dup_1621__emlr_1618__pinl_1079__flat_73 = _fill_( _copy_( _pinl_1079__flat_73), _emlr_1617__pinl_1079__flat_73); 
+    _free_( _pinl_1079__flat_73); 
+  }
+  _emrb_1622 = ( _emrb_1619 ? _dup_1620__emlr_1618__pinl_1079__flat_73 : _dup_1621__emlr_1618__pinl_1079__flat_73 ); 
+  return( _emrb_1622); 
+}
+
+
+
+/****************************************************************************
+ * Loop function with Loop Count 8192:
+ * _MAIN::_dup_1332_scan__Loop_0(...) [ body ]
+ ****************************************************************************/
+int[8192] _MAIN::_dup_1332_scan__Loop_0( int s { ,NN } , int i { ,NN } , int[8192] a { ,NN } )
+/*
+ *  _dup_1332_scan__Loop_0 ::  ---
+ */
+{ 
+  int _emal_1598__pinl_792__mose_90 { , NN } ; 
+  int[8192] _emal_1597__emec_1553_a { , NN } ; 
+  int _emal_1594__pinl_798__flat_316 { , NN } ; 
+  int _emal_1593__al_1340 { , NN } ; 
+  bool _emal_1592__pinl_823__flat_370 { , NN } ; 
+  int[8192] _emec_1553_a { , NN } ; 
+  int _al_1340 { , NN } ; 
+  int _pinl_792__mose_90 { , NN } ; 
+  int[8192] _pinl_795__flat_578 { , NN } ; 
+  int _pinl_797__flat_272 { , NN } ; 
+  int _pinl_798__flat_316 { , NN } ; 
+  bool _pinl_823__flat_370 { , NN } ; 
+  int[8192] a__SSA0_4 { , NN } ;  /* declared: int[.] */
+  int[8192] a__SSA0_3 { , NN } ;  /* declared: int[.] */
+
+  _emal_1598__pinl_792__mose_90 = _alloc_( 1, 0, [:int]); 
+  _pinl_792__mose_90 = _fill_( _idx_sel_( i, a), _emal_1598__pinl_792__mose_90); 
+  _emal_1597__emec_1553_a = a; 
+  _emec_1553_a = _fill_( _noop_( a), _emal_1597__emec_1553_a); 
+  _pinl_795__flat_578 = _fill_( _idx_modarray_AxSxS_( _emec_1553_a, i, s), _emec_1553_a); 
+  _pinl_797__flat_272 = _fill_( _add_SxS_( _pinl_792__mose_90, s), _pinl_792__mose_90); 
+  _free_( s); 
+  _emal_1594__pinl_798__flat_316 = _alloc_( 1, 0, [:int]); 
+  _pinl_798__flat_316 = _fill_( _add_SxS_( 1, i), _emal_1594__pinl_798__flat_316); 
+  _emal_1593__al_1340 = i; 
+  _al_1340 = _fill_( _add_SxS_( -8191, i), _emal_1593__al_1340); 
+  _emal_1592__pinl_823__flat_370 = _alloc_( 1, 0, [:int]); 
+  _pinl_823__flat_370 = _fill_( _lt_SxS_( _al_1340, 0), _emal_1592__pinl_823__flat_370); 
+  _free_( _al_1340); 
+  if (_pinl_823__flat_370) 
+  { 
+    _free_( _pinl_823__flat_370); 
+    a__SSA0_3 = _MAIN::_dup_1332_scan__Loop_0( _pinl_797__flat_272, _pinl_798__flat_316, _pinl_795__flat_578) ; 
+  }
+  else
+  { 
+    _free_( _pinl_798__flat_316); 
+    _free_( _pinl_797__flat_272); 
+    _free_( _pinl_823__flat_370); 
+  }
+  a__SSA0_4 = ( _pinl_823__flat_370 ? a__SSA0_3 : _pinl_795__flat_578 ); 
+  return( a__SSA0_4); 
+}
+
+
+
+/****************************************************************************
+ * Loop function with Loop Count 10000:
+ * _MAIN::_dup_1330_scan__Loop_0(...) [ body ]
+ ****************************************************************************/
+int, int[10000] _MAIN::_dup_1330_scan__Loop_0( int s { ,NN } , int i { ,NN } , int[10000] a { ,NN } )
+/*
+ *  _dup_1330_scan__Loop_0 ::  ---
+ */
+{ 
+  int _emal_1605__pinl_792__mose_90 { , NN } ; 
+  int[10000] _emal_1604__emec_1554_a { , NN } ; 
+  int _emal_1601__pinl_798__flat_316 { , NN } ; 
+  int _emal_1600__al_1342 { , NN } ; 
+  bool _emal_1599__pinl_823__flat_370 { , NN } ; 
+  int[10000] _emec_1554_a { , NN } ; 
+  int _al_1342 { , NN } ; 
+  int _pinl_792__mose_90 { , NN } ; 
+  int[10000] _pinl_795__flat_578 { , NN } ; 
+  int _pinl_797__flat_272 { , NN } ; 
+  int _pinl_798__flat_316 { , NN } ; 
+  bool _pinl_823__flat_370 { , NN } ; 
+  int s__SSA0_3 { , NN } ; 
+  int[10000] a__SSA0_4 { , NN } ;  /* declared: int[.] */
+  int[10000] a__SSA0_3 { , NN } ;  /* declared: int[.] */
+  int s__SSA0_2 { , NN } ; 
+
+  _emal_1605__pinl_792__mose_90 = _alloc_( 1, 0, [:int]); 
+  _pinl_792__mose_90 = _fill_( _idx_sel_( i, a), _emal_1605__pinl_792__mose_90); 
+  _emal_1604__emec_1554_a = a; 
+  _emec_1554_a = _fill_( _noop_( a), _emal_1604__emec_1554_a); 
+  _pinl_795__flat_578 = _fill_( _idx_modarray_AxSxS_( _emec_1554_a, i, s), _emec_1554_a); 
+  _pinl_797__flat_272 = _fill_( _add_SxS_( _pinl_792__mose_90, s), _pinl_792__mose_90); 
+  _free_( s); 
+  _emal_1601__pinl_798__flat_316 = _alloc_( 1, 0, [:int]); 
+  _pinl_798__flat_316 = _fill_( _add_SxS_( 1, i), _emal_1601__pinl_798__flat_316); 
+  _emal_1600__al_1342 = i; 
+  _al_1342 = _fill_( _add_SxS_( -9999, i), _emal_1600__al_1342); 
+  _emal_1599__pinl_823__flat_370 = _alloc_( 1, 0, [:int]); 
+  _pinl_823__flat_370 = _fill_( _lt_SxS_( _al_1342, 0), _emal_1599__pinl_823__flat_370); 
+  _free_( _al_1342); 
+  if (_pinl_823__flat_370) 
+  { 
+    _free_( _pinl_823__flat_370); 
+    s__SSA0_2, a__SSA0_3 = _MAIN::_dup_1330_scan__Loop_0( _pinl_797__flat_272, _pinl_798__flat_316, _pinl_795__flat_578) ; 
+  }
+  else
+  { 
+    _free_( _pinl_798__flat_316); 
+    _free_( _pinl_823__flat_370); 
+  }
+  a__SSA0_4 = ( _pinl_823__flat_370 ? a__SSA0_3 : _pinl_795__flat_578 ); 
+  s__SSA0_3 = ( _pinl_823__flat_370 ? s__SSA0_2 : _pinl_797__flat_272 ); 
+  return( s__SSA0_3, a__SSA0_4); 
+}
+
+
+
+/****************************************************************************
+ * _MAIN:_INIT::init(...) [ body ]
+ ****************************************************************************/
+hidden(World::World) *, hidden(Benchmarking::Benchmarking) *, hidden(MTClock::MTClock) *, hidden(Terminal::Terminal) *, hidden(TermFile::TermFile) * _MAIN:_INIT::init( hidden(World::World) *_rso_115_TheWorld { ,NN } , hidden(Benchmarking::Benchmarking) *_rso_114_TheBenchmarkObject { ,NN } , hidden(MTClock::MTClock) *_rso_113_TheMTClock { ,NN } , hidden(Terminal::Terminal) *_rso_112_TheTerminal { ,NN } , hidden(TermFile::TermFile) *_rso_111_stdout { ,NN } )
+/*
+ *  init ::  ---
+ */
+{ 
+  hidden(TermFile::TermFile) _rso_111_stdout__SSA0_1 { , NN } ;  /* declared: TermFile::TermFile */
+  hidden(Terminal::Terminal) _rso_112_TheTerminal__SSA0_2 { , NN } ;  /* declared: Terminal::Terminal */
+  hidden(Terminal::Terminal) _rso_112_TheTerminal__SSA0_1 { , NN } ;  /* declared: Terminal::Terminal */
+  hidden(World::World) _rso_115_TheWorld__SSA0_4 { , NN } ;  /* declared: World::World */
+  hidden(MTClock::MTClock) _rso_113_TheMTClock__SSA0_1 { , NN } ;  /* declared: MTClock::MTClock */
+  hidden(World::World) _rso_115_TheWorld__SSA0_3 { , NN } ;  /* declared: World::World */
+  hidden(Benchmarking::Benchmarking) _rso_114_TheBenchmarkObject__SSA0_1 { , NN } ;  /* declared: Benchmarking::Benchmarking */
+  hidden(World::World) _rso_115_TheWorld__SSA0_2 { , NN } ;  /* declared: World::World */
+  hidden(World::World) _rso_115_TheWorld__SSA0_1 { , NN } ;  /* declared: World::World */
+
+  _rso_115_TheWorld__SSA0_1 = World:_INIT::init_TheWorld( _rso_115_TheWorld) ; 
+  _rso_115_TheWorld__SSA0_2, _rso_114_TheBenchmarkObject__SSA0_1 = Benchmarking:_INIT::init_TheBenchmarkObject( _rso_115_TheWorld__SSA0_1, _rso_114_TheBenchmarkObject) ; 
+  _rso_115_TheWorld__SSA0_3, _rso_113_TheMTClock__SSA0_1 = MTClock:_INIT::init_TheMTClock( _rso_115_TheWorld__SSA0_2, _rso_113_TheMTClock) ; 
+  _rso_115_TheWorld__SSA0_4, _rso_112_TheTerminal__SSA0_1 = Terminal:_INIT::init_TheTerminal( _rso_115_TheWorld__SSA0_3, _rso_112_TheTerminal) ; 
+  _rso_112_TheTerminal__SSA0_2, _rso_111_stdout__SSA0_1 = TermFile:_INIT::init_stdout( _rso_112_TheTerminal__SSA0_1, _rso_111_stdout) ; 
+  return( _rso_115_TheWorld__SSA0_4, _rso_114_TheBenchmarkObject__SSA0_1, _rso_113_TheMTClock__SSA0_1, _rso_112_TheTerminal__SSA0_2, _rso_111_stdout__SSA0_1); 
+}
+
+
+
+/****************************************************************************
+ * ScalarArith::+(...) [ body ]
+ ****************************************************************************/
+inline
+int ScalarArith::+( int A { ,NN } , int B { ,NN } )
+/*
+ *  + ::  ---
+ */
+{ 
+  int _emal_1606__flat_272 { , NN } ; 
+  int _flat_272 { , NN } ; 
+
+  _emal_1606__flat_272 = _alloc_( 1, 0, [:int]); 
+  _flat_272 = _fill_( _add_SxS_( B, A), _emal_1606__flat_272); 
+  _dec_rc_( A, 1); 
+  _dec_rc_( B, 1); 
+  return( _flat_272); 
+}
+
+
+
+/****************************************************************************
+ * StdIO::printf(...) [ body ]
+ ****************************************************************************/
+inline
+hidden(Terminal::Terminal) *, hidden(TermFile::TermFile) * StdIO::printf( hidden(Terminal::Terminal) *_rso_307_TheTerminal { ,NN } , hidden(TermFile::TermFile) *_rso_306_stdout { ,NN } , hidden(String::string) FORMAT { ,NN } , ...)
+/*
+ *  printf ::  ---
+ */
+{ 
+  hidden(TermFile::TermFile) _rso_306_stdout__SSA0_1 { , NN } ;  /* declared: TermFile::TermFile */
+  hidden(Terminal::Terminal) _rso_307_TheTerminal__SSA0_1 { , NN } ;  /* declared: Terminal::Terminal */
+
+  _rso_307_TheTerminal__SSA0_1, _rso_306_stdout__SSA0_1 = TermFile::printf( _rso_307_TheTerminal, _rso_306_stdout, FORMAT) ; 
+  _dec_rc_( FORMAT, 1); 
+  return( _rso_307_TheTerminal__SSA0_1, _rso_306_stdout__SSA0_1); 
+}
+
+
+
+/*
+ *  FFI wrap/unwrap/is functions (TYPEDEFS)
+ */
+
+
+/*-----------------------------------------------*/

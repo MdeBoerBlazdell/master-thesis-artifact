@@ -1,0 +1,61 @@
+use Array: all;
+use CommandLine: all;
+use StdIO: all;
+use Benchmarking: all;
+use Hiding: all;
+
+// The matrix is ROWS x N (ROWS rows, each a vector of length N).  The benchmark
+// performs the operation once on every row, so the row count sets the number of
+// operations 
+
+#ifndef N
+#define N 512
+#endif
+
+#ifndef ROWS
+#define ROWS 65536
+#endif
+
+// Extract row i either by plain selection (a[i]) or the slice primitive
+// (_slice_VxA_).  Both yield a length-N vector; the slice form materialises a
+// copy while the selection can alias into 'a'.
+#ifdef SLICE
+  #define sel(i,a) _slice_VxA_([i], a)
+#else
+  #define sel(i,a) a[i]
+#endif
+
+
+noinline
+double foo(double[.] a)
+{
+  return a[1];
+}
+
+noinline
+double over_rows(double[.,.] a, int n)
+{
+  benchThis();
+  acc = sum({[iv] -> foo(sel(iv,a)) | [iv] < [n]});
+  return acc;
+}
+
+int main()
+{
+  // hideValue keeps the element values opaque to the optimiser so the result
+  // cannot be constant-folded away.
+  a = _hideValue_SxA_(1d, {[i,j] -> tod(i * N + j) | [i,j] < [ROWS, N]});
+
+  ibench = getInterval("bench", 1);
+
+  start(ibench);
+  acc = over_rows(a, ROWS);
+  end(ibench);
+
+  time, unit = returnResultUnit(ibench);
+
+  /* Rows processed per second. */
+  printf("%lf\n", tod(ROWS) / time);
+  
+  return toi(acc);
+}
